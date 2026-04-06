@@ -1,0 +1,6 @@
+[
+  {"chunk_id": 0, "chapter_ref": "第1章", "quote": "灵气如潮水涌入经脉", "char_range": [50000, 50015], "reason": "修仙描写生动"},
+  {"chunk_id": 3, "chapter_ref": "第4章", "quote": "剑光划破长空，也划破了他最后的退路", "char_range": [400000, 400020], "reason": "高潮描写有力"},
+  {"chunk_id": 3, "chapter_ref": "第4章", "quote": "师父的身影化为漫天星辰", "char_range": [450000, 450015], "reason": "牺牲场景情感冲击强"},
+  {"chunk_id": 4, "chapter_ref": "第5章", "quote": "他站在山巅，风从四方来", "char_range": [580000, 580012], "reason": "结尾意象开阔"}
+]

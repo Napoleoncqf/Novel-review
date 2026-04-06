@@ -1,0 +1,11 @@
+{
+  "source_file": "golden_short.txt",
+  "source_file_sha256": "aabbccdd11223344",
+  "total_chars": 6200,
+  "total_chunks": 3,
+  "chunks": [
+    {"chunk_id": 0, "char_range": [0, 2100], "chapter_ref": "第1章 起始", "analysis_depth": "deep"},
+    {"chunk_id": 1, "char_range": [2100, 4200], "chapter_ref": "第2章 转折", "analysis_depth": "deep"},
+    {"chunk_id": 2, "char_range": [4200, 6200], "chapter_ref": "第3章 结局", "analysis_depth": "deep"}
+  ]
+}

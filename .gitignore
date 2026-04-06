@@ -1,0 +1,34 @@
+# 环境与密钥
+.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# 测试缓存
+.pytest_cache/
+
+# 小说原文（版权内容，不上传）
+data/
+
+# 分析产物（可重新生成）
+artifacts/
+output/
+
+# IDE
+.vscode/
+.idea/
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 进度文件
+progress.json
+
+# tasks.json 含项目内部设计细节，按需决定
+# tasks.json

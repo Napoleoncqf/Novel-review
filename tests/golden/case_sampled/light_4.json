@@ -1,0 +1,11 @@
+{
+  "chunk_id": 4,
+  "char_range": [480000, 600000],
+  "chapter_ref": "第5章",
+  "plot_events": ["击败魔族", "成为掌门"],
+  "characters_present": ["陈风"],
+  "plot_progression": "yes: 主线收束",
+  "state_changes": [{"entity": "陈风", "change": "成为掌门"}],
+  "pacing_score": 4,
+  "candidate_flags": ["高潮"]
+}

@@ -1,0 +1,13 @@
+{
+  "source_file": "golden_long.txt",
+  "source_file_sha256": "99887766aabbccdd",
+  "total_chars": 600000,
+  "total_chunks": 5,
+  "chunks": [
+    {"chunk_id": 0, "char_range": [0, 120000], "chapter_ref": "第1章", "analysis_depth": "deep"},
+    {"chunk_id": 1, "char_range": [120000, 240000], "chapter_ref": "第2章", "analysis_depth": "light"},
+    {"chunk_id": 2, "char_range": [240000, 360000], "chapter_ref": "第3章", "analysis_depth": "light"},
+    {"chunk_id": 3, "char_range": [360000, 480000], "chapter_ref": "第4章", "analysis_depth": "deep"},
+    {"chunk_id": 4, "char_range": [480000, 600000], "chapter_ref": "第5章", "analysis_depth": "deep"}
+  ]
+}

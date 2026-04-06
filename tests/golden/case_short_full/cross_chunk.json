@@ -1,0 +1,28 @@
+{
+  "pacing_curve": [3, 5, 4],
+  "character_arcs": [
+    {
+      "name": "李明",
+      "appearances": [0, 1, 2],
+      "traits": ["迷茫好奇", "震惊恐惧", "释然坚定"],
+      "arc_summary": "从迷茫的外来者成长为守护秘密的同行者"
+    },
+    {
+      "name": "老张",
+      "appearances": [0, 1, 2],
+      "traits": ["神秘沉默", "愤怒无奈", "欣慰"],
+      "arc_summary": "从防备到信任"
+    }
+  ],
+  "foreshadowing_pairs": [
+    {
+      "description": "老张提到'这里的人都有秘密'",
+      "planted_chunk": 0,
+      "resolved_chunk": 1,
+      "status": "resolved"
+    }
+  ],
+  "setting_conflicts": [],
+  "emotion_curve": ["平静、好奇", "紧张、恐惧", "温暖、释然"],
+  "coverage": {"total_chunks": 3, "deep_chunks": 3, "ratio": 1.0}
+}

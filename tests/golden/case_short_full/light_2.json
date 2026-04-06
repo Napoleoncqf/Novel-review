@@ -1,0 +1,14 @@
+{
+  "chunk_id": 2,
+  "char_range": [4200, 6200],
+  "chapter_ref": "第3章 结局",
+  "plot_events": ["真相大白", "李明做出选择"],
+  "characters_present": ["李明", "老张"],
+  "plot_progression": "yes: 主线收束，伏笔回收",
+  "state_changes": [
+    {"entity": "李明", "change": "完成成长"},
+    {"entity": "李明与老张的关系", "change": "和解"}
+  ],
+  "pacing_score": 4,
+  "candidate_flags": ["高潮"]
+}

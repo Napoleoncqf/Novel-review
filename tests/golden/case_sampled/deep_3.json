@@ -1,0 +1,18 @@
+{
+  "chunk_id": 3,
+  "char_range": [360000, 480000],
+  "chapter_ref": "第4章",
+  "plot_events": ["大战魔族", "师父牺牲"],
+  "characters_present": ["陈风（悲痛、坚定）", "师父（牺牲）", "魔族首领（残忍）"],
+  "emotional_tone": "悲壮、热血",
+  "worldbuilding_elements": ["魔族入侵背景"],
+  "foreshadowing": [{"description": "师父提到'天道有缺'", "status": "resolved", "chunk_id": 0}],
+  "pacing_score": 5,
+  "information_density": 5,
+  "notable_writing": ["剑光划破长空，也划破了他最后的退路"],
+  "evidence": [
+    {"quote": "剑光划破长空，也划破了他最后的退路", "char_range": [400000, 400020], "chapter_ref": "第4章", "reason": "高潮描写有力"},
+    {"quote": "师父的身影化为漫天星辰", "char_range": [450000, 450015], "chapter_ref": "第4章", "reason": "牺牲场景情感冲击强"}
+  ],
+  "defects_detected": ["D01"]
+}

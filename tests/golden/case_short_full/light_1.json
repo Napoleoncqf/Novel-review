@@ -1,0 +1,14 @@
+{
+  "chunk_id": 1,
+  "char_range": [2100, 4200],
+  "chapter_ref": "第2章 转折",
+  "plot_events": ["李明发现小镇秘密", "与老张发生冲突"],
+  "characters_present": ["李明", "老张", "村长"],
+  "plot_progression": "yes: 主线冲突升级",
+  "state_changes": [
+    {"entity": "李明", "change": "从好奇变为恐惧"},
+    {"entity": "李明与老张的关系", "change": "从信任到怀疑"}
+  ],
+  "pacing_score": 5,
+  "candidate_flags": ["高潮", "转折点", "关系突变"]
+}

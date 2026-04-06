@@ -1,0 +1,11 @@
+{
+  "chunk_id": 0,
+  "char_range": [0, 2000],
+  "chapter_ref": "",
+  "plot_events": ["角色A出场"],
+  "characters_present": ["角色A"],
+  "plot_progression": "no: 缺乏明确主线推进",
+  "state_changes": [],
+  "pacing_score": 2,
+  "candidate_flags": []
+}

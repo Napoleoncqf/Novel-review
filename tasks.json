@@ -1,0 +1,635 @@
+{
+  "project": {
+    "name": "Novel Review Tool",
+    "description": "小说多维度自动评价工具，输入txt文件，输出结构化评价报告",
+    "version": "0.2.0",
+    "tech_stack": {
+      "language": "Python 3.11+",
+      "llm_provider": "Google Gemini API (gemini-3.1-pro-preview)",
+      "output_format": "Markdown报告 + JSON结构化数据",
+      "dependencies": [
+        "python-dotenv",
+        "openai",
+        "tiktoken",
+        "rich",
+        "pydantic",
+        "PyYAML",
+        "tenacity",
+        "charset-normalizer",
+        "pytest"
+      ]
+    }
+  },
+  "design": {
+    "evaluation_dimensions": {
+      "core": [
+        {
+          "id": "plot",
+          "name": "情节结构",
+          "weight": 0.20,
+          "sub_aspects": ["起承转合完整度", "节奏感", "冲突设置", "伏笔回收", "高潮段落冲击力"],
+          "rubric": {
+            "9-10": "情节环环相扣，伏笔全部回收且令人惊叹，节奏无明显拖沓，高潮段有强烈冲击",
+            "7-8": "主线清晰完整，有1-2处精彩伏笔，节奏基本流畅，有明确高潮",
+            "5-6": "情节能推进但有松散段落，伏笔部分回收，节奏偶有拖沓",
+            "3-4": "情节断裂或大量注水，伏笔遗忘严重，缺乏明确高潮",
+            "1-2": "情节混乱无法跟踪，严重前后矛盾"
+          }
+        },
+        {
+          "id": "character",
+          "name": "人物塑造",
+          "weight": 0.20,
+          "sub_aspects": ["主角立体度", "配角辨识度", "成长弧光", "行为动机一致性", "对话个性化"],
+          "rubric": {
+            "9-10": "至少2个角色有完整心理弧光，行为动机可追溯，对话有鲜明个人特征",
+            "7-8": "主角有明确成长线，配角各有特色，行为基本合理",
+            "5-6": "主角有基本性格但不够立体，配角存在脸谱化，动机偶有不合理",
+            "3-4": "人物扁平，配角无辨识度，行为为剧情服务而非人物驱动",
+            "1-2": "人物无法区分，行为随机，无任何成长"
+          }
+        },
+        {
+          "id": "writing",
+          "name": "文笔质量",
+          "weight": 0.15,
+          "sub_aspects": ["语言风格", "修辞水平", "叙述流畅度", "废话率", "描写密度"],
+          "rubric": {
+            "9-10": "语言有辨识度和美感，修辞精准不堆砌，叙述如行云流水",
+            "7-8": "文笔流畅，用词准确，偶有出彩句子，无明显废话",
+            "5-6": "文笔合格但平淡，有少量口水话或重复描写",
+            "3-4": "用词单调或堆砌，大量废话注水，叙述生硬",
+            "1-2": "语病频出，基本表达能力欠缺"
+          }
+        },
+        {
+          "id": "worldbuilding",
+          "name": "世界观构建",
+          "weight": 0.15,
+          "sub_aspects": ["设定完整性", "内部逻辑自洽", "细节丰富度", "设定与情节的融合度"],
+          "rubric": {
+            "9-10": "设定体系完整且自洽，细节丰富但不过度说明，设定自然融入情节",
+            "7-8": "核心设定清晰合理，有一定独创性，偶有小矛盾",
+            "5-6": "设定基本能支撑故事但缺乏深度，有借鉴痕迹",
+            "3-4": "设定粗糙或大量借鉴，逻辑漏洞多，硬伤明显",
+            "1-2": "设定混乱矛盾，无法构建可信世界"
+          }
+        },
+        {
+          "id": "theme",
+          "name": "主题深度",
+          "weight": 0.15,
+          "sub_aspects": ["核心思想", "价值表达", "是否有余味", "主题与情节的有机结合"],
+          "rubric": {
+            "9-10": "主题深刻且有独特视角，不说教，读后有持久思考",
+            "7-8": "有明确主题表达，通过情节自然呈现，有一定思考空间",
+            "5-6": "主题存在但较浅或直白，偶有说教感",
+            "3-4": "主题模糊或流于口号，与情节脱节",
+            "1-2": "无法提炼出主题，纯粹流水账"
+          }
+        }
+      ],
+      "auxiliary": [
+        {
+          "id": "dialogue",
+          "name": "对话质量",
+          "weight": 0.05,
+          "sub_aspects": ["符合人设", "信息密度", "口语化程度", "推动情节能力"],
+          "rubric": {
+            "9-10": "对话即人物名片，每句都有信息量或情感推动",
+            "7-8": "对话自然，基本符合人设，能推动情节",
+            "5-6": "对话功能性完成但缺乏个性",
+            "3-4": "对话生硬或千人一面",
+            "1-2": "对话不像人话"
+          }
+        },
+        {
+          "id": "emotion",
+          "name": "情感感染力",
+          "weight": 0.05,
+          "sub_aspects": ["高潮段冲击力", "情绪调动能力", "情感真实度"],
+          "rubric": {
+            "9-10": "多处让人落泪/热血沸腾/脊背发凉，情感共鸣强烈",
+            "7-8": "有1-2处明确的情感高潮，能引起共鸣",
+            "5-6": "情感表达存在但力度不足，未能深入触动",
+            "3-4": "情感苍白或刻意煽情",
+            "1-2": "完全无法引起情感反应"
+          }
+        },
+        {
+          "id": "innovation",
+          "name": "创新性",
+          "weight": 0.05,
+          "sub_aspects": ["题材新颖度", "叙事手法", "是否有套路化问题"],
+          "rubric": {
+            "9-10": "题材或手法有开创性，让人眼前一亮",
+            "7-8": "在类型框架内有独特切入点或新鲜元素",
+            "5-6": "基本符合类型预期，无明显创新也无严重套路",
+            "3-4": "严重套路化，情节走向可预测",
+            "1-2": "完全是模板化写作"
+          }
+        }
+      ]
+    },
+    "scoring_policy": {
+      "score_range": "1-10",
+      "total_weight_check": 1.0,
+      "rounding": "保留1位小数",
+      "coverage_rule": "文笔、主题、情感等依赖细读证据的维度，只能基于精读块给出高置信度评分；抽样模式下必须在报告中披露coverage和confidence"
+    },
+    "evidence_policy": {
+      "requirements": [
+        "每个维度评分至少绑定1条原文证据",
+        "每条证据都要包含quote(<=30字)、char_range、chapter_ref、reason",
+        "Phase3不得生成未在Phase1或Phase2产物中出现的证据"
+      ]
+    },
+    "defect_detection_rules": [
+      {
+        "id": "D01",
+        "name": "龙傲天",
+        "description": "主角连续获胜且代价过低，导致核心冲突失去悬念",
+        "heuristic": "最近5个涉及主角核心冲突的块中，>=3次获胜且cost_score<=1，且没有明确失败/反噬记录"
+      },
+      {
+        "id": "D02",
+        "name": "金手指过度",
+        "description": "外挂/系统/血脉等设定过强，主要冲突过度依赖外部力量解决",
+        "heuristic": "最近5次核心冲突中，external_power_resolution_ratio>=0.60"
+      },
+      {
+        "id": "D03",
+        "name": "感情线突兀",
+        "description": "关系状态突变前缺乏足够铺垫",
+        "heuristic": "关系从无到暧昧/恋爱前3个块内，互动场景<2且缺少明确情绪递进证据"
+      },
+      {
+        "id": "D04",
+        "name": "节奏塌陷",
+        "description": "连续多块没有有效推进主线或状态变化",
+        "heuristic": "连续3块plot_progression=false且pacing_score<=2"
+      },
+      {
+        "id": "D05",
+        "name": "人设崩塌",
+        "description": "角色行为与既定性格或目标明显冲突，且文本内未给出转折理由",
+        "heuristic": "同一角色出现>=2次高冲突行为标签且缺少bridge_reason"
+      },
+      {
+        "id": "D06",
+        "name": "设定遗忘",
+        "description": "前期设定后期失效、消失或互相矛盾",
+        "heuristic": "同一设定实体存在属性冲突，或已声明规则在后续关键情节中被无解释忽略"
+      },
+      {
+        "id": "D07",
+        "name": "注水严重",
+        "description": "重复描写、无效对话或低信息密度内容过多",
+        "heuristic": "连续2块information_density<=2且duplicate_scene_ratio>=0.30"
+      },
+      {
+        "id": "D08",
+        "name": "伏笔断裂",
+        "description": "埋下的伏笔长期未回收或被后文直接矛盾覆盖",
+        "heuristic": "重要setup在后续>=5块仍未resolve，或出现contradiction=true"
+      }
+    ],
+    "long_novel_strategy": {
+      "chunking": {
+        "method": "chapter_aware",
+        "description": "优先按章节边界切分；若无章节标记则按5000-8000字固定窗口切分",
+        "chunk_size_chars": 6000,
+        "overlap_chars": 500,
+        "chapter_detection_patterns": [
+          "第[一二三四五六七八九十百千零\\d]+章",
+          "Chapter\\s*\\d+",
+          "^\\s*[0-9]+\\s*$"
+        ]
+      },
+      "processing_pipeline": {
+        "phase0_chunk_manifest": {
+          "description": "先生成稳定的块清单，作为后续断点续传和结果落盘的基础",
+          "per_chunk_output": {
+            "chunk_id": "int",
+            "char_range": "[start, end]",
+            "chapter_ref": "章节标题或编号",
+            "source_file_sha256": "输入文本内容哈希",
+            "analysis_depth": "light 或 deep"
+          }
+        },
+        "phase1_light_screening": {
+          "description": "全量轻筛，保证所有块都有基础摘要，供抽样和全局节奏判断使用",
+          "per_chunk_output": {
+            "chunk_id": "int",
+            "char_range": "[start, end]",
+            "chapter_ref": "章节标题或编号",
+            "plot_events": "本块关键情节事件列表",
+            "characters_present": "出场人物及其行为/情感状态",
+            "plot_progression": "是否推进主线(yes/no + reason)",
+            "state_changes": "角色/关系/设定的状态变化列表",
+            "pacing_score": "1-5的节奏紧凑度",
+            "candidate_flags": "高潮/设定变更/关系突变/可疑缺陷等标签"
+          }
+        },
+        "phase1_deep_analysis": {
+          "description": "对关键块进行精读分析，补充维度评分所需证据和缺陷线索",
+          "per_chunk_output": {
+            "chunk_id": "int",
+            "char_range": "[start, end]",
+            "chapter_ref": "章节标题或编号",
+            "plot_events": "本块关键情节事件列表",
+            "characters_present": "出场人物及其行为/情感状态",
+            "emotional_tone": "情绪基调(紧张/平静/悲伤/热血等)",
+            "worldbuilding_elements": "新出现的设定要素及属性",
+            "foreshadowing": "分planted和resolved两类记录",
+            "pacing_score": "1-5的节奏紧凑度",
+            "information_density": "1-5的信息增量密度",
+            "notable_writing": "文笔亮点或问题(引用原文<=30字)",
+            "evidence": "证据列表，每项包含quote、char_range、chapter_ref、reason",
+            "defects_detected": "触发的缺陷规则ID列表"
+          }
+        },
+        "phase2_cross_chunk_synthesis": {
+          "description": "跨块综合分析，关注全局线索，并只基于已落盘结果生成中间产物",
+          "analyses": [
+            "情节节奏曲线：pacing_score随chunk_id的变化趋势",
+            "人物成长线：每个主要角色跨块的状态变化轨迹",
+            "伏笔对应表：foreshadowing的埋设与回收配对",
+            "设定一致性：worldbuilding_elements的前后矛盾检查",
+            "情绪曲线：emotional_tone的波动模式",
+            "coverage统计：light/deep块数量、精读占比、证据覆盖度"
+          ]
+        },
+        "phase3_final_evaluation": {
+          "description": "基于Phase1和Phase2的已验证产物，生成最终评分和报告",
+          "inputs": [
+            "所有chunk摘要的汇总",
+            "Phase2的跨块分析结果",
+            "evidence索引"
+          ],
+          "output": "完整评价报告(见output_template)"
+        }
+      },
+      "sampling_strategy": {
+        "description": "对超长小说(>50万字)采用先全量轻筛、再关键区间精读的两段式策略，避免先验依赖pacing_score",
+        "threshold_chars": 500000,
+        "pass0_screening": {
+          "applies_to": "全部chunks",
+          "output_fields": [
+            "plot_events",
+            "characters_present",
+            "plot_progression",
+            "state_changes",
+            "pacing_score",
+            "candidate_flags"
+          ]
+        },
+        "deep_read_selection": {
+          "must_read_chunks": [
+            "前3块(开篇)",
+            "后3块(结尾)",
+            "连续高pacing_score且伴随plot_progression=true的区间",
+            "发生重大关系/设定/主线状态变化的块",
+            "等距抽样的代表块(每10块至少1块)"
+          ],
+          "selection_rules": [
+            "高pacing_score不能作为唯一条件，必须结合plot_progression或state_changes",
+            "未精读块只参与情节连续性判断，不参与高置信度的文笔、主题、情感细评分",
+            "最终报告必须披露精读块占比和结论置信度"
+          ]
+        }
+      },
+      "storage_strategy": {
+        "artifacts": {
+          "chunk_manifest": "artifacts/chunks.json",
+          "phase1_light": "artifacts/phase1_light/chunk_{chunk_id}.json",
+          "phase1_deep": "artifacts/phase1_deep/chunk_{chunk_id}.json",
+          "phase2_summary": "artifacts/phase2/cross_chunk_analysis.json",
+          "evidence_index": "artifacts/phase2/evidence_index.json",
+          "final_report_markdown": "output/report.md",
+          "final_report_json": "output/report.json"
+        },
+        "resume_key": [
+          "source_file_sha256",
+          "chunk_id",
+          "analysis_depth",
+          "prompt_version",
+          "model_name"
+        ],
+        "requirements": [
+          "每个chunk单独落盘，支持失败块单独重试",
+          "支持--resume和--force参数",
+          "prompt或模型变化后自动失效旧缓存，避免脏结果复用"
+        ]
+      }
+    },
+    "prompt_templates": {
+      "global_constraints": [
+        "只输出合法JSON，不要输出Markdown包裹",
+        "每个重要主张都要绑定证据，不确定时输出low_confidence而不是编造",
+        "引用原文每条不得超过30字"
+      ],
+      "perspective_literary": {
+        "name": "文学性侧重视角",
+        "system_prompt": "你是一位严格的文学评论者，关注语言艺术、叙事技巧、主题深度和人物心理刻画。你不关心商业表现，只评价文学价值。评价时必须引用已提供的证据，不允许编造新引用。",
+        "focus_dimensions": ["writing", "character", "theme", "emotion"]
+      },
+      "perspective_commercial": {
+        "name": "商业性侧重视角",
+        "system_prompt": "你是一位网络小说编辑，关注可读性、节奏感、爽点设置、读者粘性。你从商业角度评估作品的市场表现潜力。评价时必须指出具体的爽点或弃书风险点位置，且只能引用已提供证据。",
+        "focus_dimensions": ["plot", "dialogue", "innovation", "emotion"]
+      },
+      "light_screening_prompt": "请分析以下小说片段（第{chunk_id}块，字符范围{char_range}，章节{chapter_ref}）。\n\n前文摘要：\n{previous_summary}\n\n当前片段：\n{chunk_text}\n\n请输出轻筛JSON，至少包含plot_events、characters_present、plot_progression、state_changes、pacing_score、candidate_flags。",
+      "deep_chunk_analysis_prompt": "请分析以下小说片段（第{chunk_id}块，字符范围{char_range}，章节{chapter_ref}）。\n\n前文摘要：\n{previous_summary}\n\n当前片段：\n{chunk_text}\n\n请严格按JSON输出，并为关键判断附上evidence列表。每条evidence必须包含quote(<=30字)、char_range、chapter_ref、reason。",
+      "final_evaluation_prompt": "基于以下小说的分块分析结果，请从文学性与商业性两个视角生成最终评价报告。\n\n小说基本信息：{novel_info}\n分块摘要汇总：{chunk_summaries}\n跨块分析：{cross_chunk_analysis}\n证据索引：{evidence_index}\n评分标准（rubric）：{rubric}\n\n要求：只引用evidence_index中已有证据；若coverage不足，请在对应维度标注confidence=low。请严格按output_template输出。"
+    },
+    "output_template": {
+      "report_sections": [
+        {
+          "section": "基本信息",
+          "fields": ["书名", "字数", "分块数", "类型推断"]
+        },
+        {
+          "section": "分析覆盖度",
+          "fields": ["阅读模式(全量/抽样)", "精读块占比", "结论置信度", "证据覆盖说明"]
+        },
+        {
+          "section": "总评",
+          "fields": ["一句话评价(<=50字)", "总分(加权)", "推荐指数(1-5星)"]
+        },
+        {
+          "section": "维度评分",
+          "format": "每个维度：分数 + 理由(<=100字) + confidence(high/medium/low) + 证据[{quote, chapter_ref, char_range}]"
+        },
+        {
+          "section": "双视角点评",
+          "sub_sections": [
+            {
+              "perspective": "文学性视角",
+              "format": "优点3条 + 不足3条 + 核心判断1句"
+            },
+            {
+              "perspective": "商业性视角",
+              "format": "优点3条 + 不足3条 + 核心判断1句"
+            }
+          ]
+        },
+        {
+          "section": "缺陷检测报告",
+          "format": "每个触发的缺陷：规则ID + 触发位置(块号/章节) + 严重程度(轻微/中等/严重) + 说明 + 证据"
+        },
+        {
+          "section": "节奏曲线",
+          "format": "ASCII图表展示pacing_score随章节的变化，标注高潮和低谷"
+        },
+        {
+          "section": "人物图谱",
+          "format": "主要角色列表：名字 + 出场块范围 + 核心特征 + 成长弧光概述"
+        },
+        {
+          "section": "改进建议",
+          "format": "针对最低分的2-3个维度，给出具体可操作的修改方向"
+        }
+      ]
+    },
+    "milestones": [
+      {
+        "id": "M1",
+        "name": "最小闭环",
+        "goal": "短篇txt端到端跑通，稳定输出合法JSON和Markdown报告",
+        "tasks": ["T01", "T02", "T03", "T04", "T05", "T06", "T07", "T08", "T11", "T12"],
+        "exit_criteria": [
+          "对一篇短篇样例可完成从读取到报告输出的全流程",
+          "Phase1和最终报告均通过schema校验",
+          "至少支持--input、--output、--resume三个CLI参数"
+        ]
+      },
+      {
+        "id": "M2",
+        "name": "稳定性与可解释性",
+        "goal": "补全跨块综合、缺陷检测、缓存恢复和证据链",
+        "tasks": ["T09", "T10", "T13"],
+        "exit_criteria": [
+          "断点续传可只重跑失败块",
+          "最终报告中的评分都能追溯到evidence_index",
+          "有至少3个golden cases覆盖短篇、中篇、长篇"
+        ]
+      },
+      {
+        "id": "M3",
+        "name": "长篇增强与交付",
+        "goal": "支持超长小说抽样精读、覆盖度披露和可交付文档",
+        "tasks": ["T14"],
+        "exit_criteria": [
+          "50万字以上文本可在抽样模式下完成分析",
+          "报告明确披露coverage和confidence",
+          "README包含运行方式、已知限制、成本说明"
+        ]
+      }
+    ],
+    "implementation_tasks": [
+      {
+        "id": "T01",
+        "name": "项目骨架与CLI入口",
+        "description": "建立src/tests目录结构、CLI参数解析和统一入口",
+        "files": [
+          "src/novel_review/__init__.py",
+          "src/novel_review/cli.py",
+          "requirements.txt"
+        ],
+        "acceptance": [
+          "python -m novel_review 或等价命令可启动",
+          "CLI至少支持--input、--output、--resume、--force、--mode参数"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T02",
+        "name": "数据模型与Schema",
+        "description": "定义chunk manifest、light/deep分析结果、cross-chunk结果、final report的Pydantic模型",
+        "files": [
+          "src/novel_review/models.py"
+        ],
+        "depends_on": ["T01"],
+        "acceptance": [
+          "所有中间产物都有明确schema",
+          "落盘前统一做schema校验"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T03",
+        "name": "配置加载与Rubric外置",
+        "description": "读取.env、模型参数、YAML版dimensions/rubric配置",
+        "files": [
+          "src/novel_review/config.py",
+          "config/dimensions.yaml",
+          "config/settings.example.yaml"
+        ],
+        "depends_on": ["T01"],
+        "acceptance": [
+          "默认配置可运行，自定义YAML可覆盖维度权重和prompt参数",
+          "缺失关键环境变量时给出明确报错"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T04",
+        "name": "文本预处理与分块清单",
+        "description": "完成txt读取、编码检测、章节识别、chunk manifest生成",
+        "files": [
+          "src/novel_review/preprocessor.py"
+        ],
+        "depends_on": ["T01", "T02"],
+        "acceptance": [
+          "支持UTF-8和常见GB系编码",
+          "生成稳定的chunk manifest并保存chapter_ref和char_range"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T05",
+        "name": "LLM调用封装",
+        "description": "实现OpenAI兼容API调用、重试、限速、token/cost统计",
+        "files": [
+          "src/novel_review/llm_client.py"
+        ],
+        "depends_on": ["T01", "T03"],
+        "acceptance": [
+          "支持模型名、温度、并发数配置",
+          "失败请求可指数退避重试并记录成本"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T06",
+        "name": "结果落盘与断点续传",
+        "description": "实现artifact目录、缓存键、resume/force逻辑",
+        "files": [
+          "src/novel_review/storage.py"
+        ],
+        "depends_on": ["T02", "T04", "T05"],
+        "acceptance": [
+          "每个chunk单独落盘",
+          "--resume只重跑缺失或失败的结果",
+          "prompt_version或model变化时旧缓存自动失效"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T07",
+        "name": "Phase1轻筛分析器",
+        "description": "对全部chunks生成light screening结果，作为长篇抽样和全局节奏输入",
+        "files": [
+          "src/novel_review/analyzer_phase1_light.py"
+        ],
+        "depends_on": ["T02", "T05", "T06"],
+        "acceptance": [
+          "全部chunks可产出合法light JSON",
+          "输出至少包含plot_progression、state_changes、pacing_score、candidate_flags"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T08",
+        "name": "Phase1精读分析器",
+        "description": "对关键块进行deep analysis，生成证据列表并支持短篇全量精读",
+        "files": [
+          "src/novel_review/analyzer_phase1_deep.py"
+        ],
+        "depends_on": ["T02", "T05", "T06", "T07"],
+        "acceptance": [
+          "deep结果包含evidence、worldbuilding_elements、foreshadowing、defects_detected",
+          "短篇模式下可对全部chunks执行deep analysis"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T09",
+        "name": "Phase2跨块综合分析",
+        "description": "汇总light/deep结果，输出节奏曲线、人物轨迹、伏笔表、coverage统计",
+        "files": [
+          "src/novel_review/analyzer_phase2.py"
+        ],
+        "depends_on": ["T02", "T07", "T08"],
+        "acceptance": [
+          "生成cross_chunk_analysis.json和evidence_index.json",
+          "可以追踪每个主要角色的状态变化"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T10",
+        "name": "缺陷检测引擎",
+        "description": "将D01-D08启发式规则实现为可调参数的检测逻辑",
+        "files": [
+          "src/novel_review/defect_rules.py"
+        ],
+        "depends_on": ["T02", "T09"],
+        "acceptance": [
+          "每条规则都有明确输入字段和阈值",
+          "最终输出包含规则ID、位置、严重程度、证据"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T11",
+        "name": "Phase3最终评价生成",
+        "description": "基于cross-chunk结果和evidence index生成双视角评分与总评",
+        "files": [
+          "src/novel_review/analyzer_phase3.py"
+        ],
+        "depends_on": ["T02", "T03", "T09", "T10"],
+        "acceptance": [
+          "所有维度评分都能关联到已有证据",
+          "coverage不足时自动下调confidence"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T12",
+        "name": "报告输出模块",
+        "description": "渲染Markdown报告、JSON结构化输出和ASCII节奏图",
+        "files": [
+          "src/novel_review/reporter.py"
+        ],
+        "depends_on": ["T11"],
+        "acceptance": [
+          "输出report.md和report.json",
+          "Markdown中包含节奏图、人物图谱、缺陷报告、覆盖度说明"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T13",
+        "name": "样例语料与回归测试",
+        "description": "建立短篇/中篇/长篇样例与golden outputs，验证schema、缓存恢复和结果稳定性",
+        "files": [
+          "tests/test_preprocessor.py",
+          "tests/test_pipeline_smoke.py",
+          "tests/golden/"
+        ],
+        "depends_on": ["T04", "T07", "T08", "T09", "T10", "T11", "T12"],
+        "acceptance": [
+          "至少3个golden cases",
+          "回归测试可检测schema破坏、字段缺失和resume回退"
+        ],
+        "status": "done"
+      },
+      {
+        "id": "T14",
+        "name": "端到端交付与文档",
+        "description": "补齐README、成本说明、已知限制和长篇抽样模式说明",
+        "files": [
+          "README.md"
+        ],
+        "depends_on": ["T12", "T13"],
+        "acceptance": [
+          "README可指导从环境配置到运行全流程",
+          "明确说明抽样模式的coverage限制和成本权衡"
+        ],
+        "status": "done"
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "chunk_id": 1,
+  "char_range": [2000, 4000],
+  "chapter_ref": "",
+  "plot_events": [],
+  "characters_present": ["角色A"],
+  "emotional_tone": "平淡",
+  "worldbuilding_elements": [],
+  "foreshadowing": [],
+  "pacing_score": 1,
+  "information_density": 1,
+  "notable_writing": [],
+  "evidence": [],
+  "defects_detected": ["D04", "D07"]
+}

@@ -1,0 +1,20 @@
+{
+  "chunk_id": 1,
+  "char_range": [2100, 4200],
+  "chapter_ref": "第2章 转折",
+  "plot_events": ["李明发现小镇秘密", "与老张发生冲突"],
+  "characters_present": ["李明（震惊、恐惧）", "老张（愤怒、无奈）", "村长（旁观）"],
+  "emotional_tone": "紧张、恐惧",
+  "worldbuilding_elements": ["地下洞穴设定"],
+  "foreshadowing": [
+    {"description": "老张提到'这里的人都有秘密'", "status": "resolved", "chunk_id": 0}
+  ],
+  "pacing_score": 5,
+  "information_density": 5,
+  "notable_writing": ["真相如冰水浇下，从头顶凉到脚底"],
+  "evidence": [
+    {"quote": "真相如冰水浇下，从头顶凉到脚底", "char_range": [2500, 2520], "chapter_ref": "第2章 转折", "reason": "比喻生动，情感冲击强"},
+    {"quote": "你不该来这里", "char_range": [3000, 3010], "chapter_ref": "第2章 转折", "reason": "对话推动冲突"}
+  ],
+  "defects_detected": ["D03"]
+}

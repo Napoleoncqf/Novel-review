@@ -1,0 +1,11 @@
+{
+  "chunk_id": 1,
+  "char_range": [2000, 4000],
+  "chapter_ref": "",
+  "plot_events": [],
+  "characters_present": ["角色A"],
+  "plot_progression": "no: 无情节推进",
+  "state_changes": [],
+  "pacing_score": 1,
+  "candidate_flags": []
+}

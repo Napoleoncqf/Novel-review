@@ -1,0 +1,8 @@
+[
+  {"chunk_id": 0, "chapter_ref": "第1章 起始", "quote": "暮色将山峦染成一片深紫", "char_range": [100, 115], "reason": "环境描写烘托氛围"},
+  {"chunk_id": 0, "chapter_ref": "第1章 起始", "quote": "这里的人都有秘密", "char_range": [1800, 1810], "reason": "伏笔，暗示小镇秘密"},
+  {"chunk_id": 1, "chapter_ref": "第2章 转折", "quote": "真相如冰水浇下，从头顶凉到脚底", "char_range": [2500, 2520], "reason": "比喻生动，情感冲击强"},
+  {"chunk_id": 1, "chapter_ref": "第2章 转折", "quote": "你不该来这里", "char_range": [3000, 3010], "reason": "对话推动冲突"},
+  {"chunk_id": 2, "chapter_ref": "第3章 结局", "quote": "他终于明白，有些秘密是用来守护的", "char_range": [5800, 5820], "reason": "主题升华"},
+  {"chunk_id": 2, "chapter_ref": "第3章 结局", "quote": "老张笑了，像山间化开的雪", "char_range": [6000, 6015], "reason": "比喻精准，人物弧光收束"}
+]

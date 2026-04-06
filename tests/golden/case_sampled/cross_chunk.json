@@ -1,0 +1,13 @@
+{
+  "pacing_curve": [4, 2, 3, 5, 4],
+  "character_arcs": [
+    {"name": "陈风", "appearances": [0, 1, 2, 3, 4], "traits": ["平凡好奇", "修炼", "竞争", "悲痛坚定", "成熟沉稳"], "arc_summary": "从平凡少年成长为一代掌门"},
+    {"name": "师父", "appearances": [0, 3], "traits": ["严厉慈祥", "牺牲"], "arc_summary": "为弟子牺牲"}
+  ],
+  "foreshadowing_pairs": [
+    {"description": "师父提到'天道有缺'", "planted_chunk": 0, "resolved_chunk": 3, "status": "resolved"}
+  ],
+  "setting_conflicts": [],
+  "emotion_curve": ["期待、紧张", "平淡", "紧张", "悲壮、热血", "释然、感慨"],
+  "coverage": {"total_chunks": 5, "deep_chunks": 3, "ratio": 0.6}
+}

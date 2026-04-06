@@ -1,0 +1,11 @@
+{
+  "chunk_id": 3,
+  "char_range": [360000, 480000],
+  "chapter_ref": "第4章",
+  "plot_events": ["大战魔族", "师父牺牲"],
+  "characters_present": ["陈风", "师父", "魔族"],
+  "plot_progression": "yes: 核心冲突爆发",
+  "state_changes": [{"entity": "师父", "change": "牺牲"}, {"entity": "陈风", "change": "觉醒真正力量"}],
+  "pacing_score": 5,
+  "candidate_flags": ["高潮", "转折点"]
+}

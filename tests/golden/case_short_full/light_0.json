@@ -1,0 +1,14 @@
+{
+  "chunk_id": 0,
+  "char_range": [0, 2100],
+  "chapter_ref": "第1章 起始",
+  "plot_events": ["主角李明初到小镇", "遇到神秘老人"],
+  "characters_present": ["李明", "老张"],
+  "plot_progression": "yes: 引入主角和核心设定",
+  "state_changes": [
+    {"entity": "李明", "change": "从城市来到小镇"},
+    {"entity": "李明与老张的关系", "change": "初次相遇"}
+  ],
+  "pacing_score": 3,
+  "candidate_flags": ["设定变更"]
+}

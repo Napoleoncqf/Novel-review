@@ -1,0 +1,35 @@
+{
+  "title": "边缘测试",
+  "total_chars": 4000,
+  "total_chunks": 2,
+  "genre_guess": "未知",
+  "read_mode": "full",
+  "deep_ratio": 1.0,
+  "confidence_note": "全量精读",
+  "dimension_scores": [
+    {"dimension_id": "plot", "dimension_name": "情节结构", "score": 2.0, "confidence": "high", "reason": "情节混乱", "evidence": []},
+    {"dimension_id": "character", "dimension_name": "人物塑造", "score": 2.0, "confidence": "high", "reason": "人物扁平", "evidence": []},
+    {"dimension_id": "writing", "dimension_name": "文笔质量", "score": 3.0, "confidence": "high", "reason": "用词单调", "evidence": [{"quote": "他走在路上", "char_range": [0, 5], "chapter_ref": "", "reason": "平淡"}]},
+    {"dimension_id": "worldbuilding", "dimension_name": "世界观构建", "score": 2.0, "confidence": "high", "reason": "无设定", "evidence": []},
+    {"dimension_id": "theme", "dimension_name": "主题深度", "score": 1.5, "confidence": "high", "reason": "无主题", "evidence": []},
+    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 2.0, "confidence": "high", "reason": "无对话", "evidence": []},
+    {"dimension_id": "emotion", "dimension_name": "情感感染力", "score": 1.5, "confidence": "high", "reason": "无情感", "evidence": []},
+    {"dimension_id": "innovation", "dimension_name": "创新性", "score": 1.0, "confidence": "high", "reason": "无创新", "evidence": []}
+  ],
+  "weighted_total": 2.1,
+  "recommendation_stars": 1,
+  "one_line_summary": "缺乏基本叙事要素的文本。",
+  "perspectives": [
+    {"perspective": "literary", "strengths": ["无"], "weaknesses": ["情节缺失", "人物扁平", "无主题"], "verdict": "不具备文学价值。"},
+    {"perspective": "commercial", "strengths": ["无"], "weaknesses": ["无可读性", "无爽点", "无悬念"], "verdict": "无商业潜力。"}
+  ],
+  "defects": [
+    {"rule_id": "D04", "rule_name": "节奏塌陷", "location": "块0-1", "severity": "severe", "description": "全文节奏低迷", "evidence": []},
+    {"rule_id": "D07", "rule_name": "注水严重", "location": "块1", "severity": "severe", "description": "信息密度极低", "evidence": []}
+  ],
+  "pacing_curve": [2, 1],
+  "character_arcs": [
+    {"name": "角色A", "appearances": [0, 1], "traits": ["无特征", "无特征"], "arc_summary": ""}
+  ],
+  "improvement_suggestions": ["建立明确的情节主线", "塑造有深度的人物", "增加冲突和悬念"]
+}

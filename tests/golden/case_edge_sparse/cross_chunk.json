@@ -1,0 +1,10 @@
+{
+  "pacing_curve": [2, 1],
+  "character_arcs": [
+    {"name": "角色A", "appearances": [0, 1], "traits": ["无特征", "无特征"], "arc_summary": ""}
+  ],
+  "foreshadowing_pairs": [],
+  "setting_conflicts": [],
+  "emotion_curve": ["平淡", "平淡"],
+  "coverage": {"total_chunks": 2, "deep_chunks": 2, "ratio": 1.0}
+}

@@ -1,0 +1,11 @@
+{
+  "chunk_id": 2,
+  "char_range": [240000, 360000],
+  "chapter_ref": "第3章",
+  "plot_events": ["参加门派大比"],
+  "characters_present": ["陈风", "对手"],
+  "plot_progression": "yes: 推进主线竞争",
+  "state_changes": [{"entity": "陈风", "change": "实力提升"}],
+  "pacing_score": 3,
+  "candidate_flags": []
+}

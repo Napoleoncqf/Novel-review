@@ -1,0 +1,20 @@
+{
+  "chunk_id": 0,
+  "char_range": [0, 2100],
+  "chapter_ref": "第1章 起始",
+  "plot_events": ["主角李明初到小镇", "遇到神秘老人"],
+  "characters_present": ["李明（迷茫、好奇）", "老张（神秘、沉默）"],
+  "emotional_tone": "平静、好奇",
+  "worldbuilding_elements": ["偏远小镇设定", "古老传说背景"],
+  "foreshadowing": [
+    {"description": "老张提到'这里的人都有秘密'", "status": "planted", "chunk_id": 0}
+  ],
+  "pacing_score": 3,
+  "information_density": 3,
+  "notable_writing": ["暮色将山峦染成一片深紫"],
+  "evidence": [
+    {"quote": "暮色将山峦染成一片深紫", "char_range": [100, 115], "chapter_ref": "第1章 起始", "reason": "环境描写烘托氛围"},
+    {"quote": "这里的人都有秘密", "char_range": [1800, 1810], "chapter_ref": "第1章 起始", "reason": "伏笔，暗示小镇秘密"}
+  ],
+  "defects_detected": []
+}

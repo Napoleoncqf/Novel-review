@@ -1,0 +1,11 @@
+{
+  "chunk_id": 0,
+  "char_range": [0, 120000],
+  "chapter_ref": "第1章",
+  "plot_events": ["主角觉醒", "进入修仙界"],
+  "characters_present": ["陈风", "师父"],
+  "plot_progression": "yes: 开篇设定展开",
+  "state_changes": [{"entity": "陈风", "change": "从凡人变为修士"}],
+  "pacing_score": 4,
+  "candidate_flags": ["设定变更"]
+}

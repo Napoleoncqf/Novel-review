@@ -1,0 +1,36 @@
+{
+  "title": "修仙长篇",
+  "total_chars": 600000,
+  "total_chunks": 5,
+  "genre_guess": "修仙/玄幻小说",
+  "read_mode": "sampled",
+  "deep_ratio": 0.6,
+  "confidence_note": "抽样精读，精读覆盖率60%",
+  "dimension_scores": [
+    {"dimension_id": "plot", "dimension_name": "情节结构", "score": 7.0, "confidence": "high", "reason": "主线清晰但中段注水", "evidence": [{"quote": "剑光划破长空，也划破了他最后的退路", "char_range": [400000, 400020], "chapter_ref": "第4章", "reason": "高潮"}]},
+    {"dimension_id": "character", "dimension_name": "人物塑造", "score": 6.5, "confidence": "medium", "reason": "主角有成长线，配角单薄", "evidence": [{"quote": "师父的身影化为漫天星辰", "char_range": [450000, 450015], "chapter_ref": "第4章", "reason": "师父形象"}]},
+    {"dimension_id": "writing", "dimension_name": "文笔质量", "score": 6.0, "confidence": "low", "reason": "仅基于精读块判断", "evidence": [{"quote": "灵气如潮水涌入经脉", "char_range": [50000, 50015], "chapter_ref": "第1章", "reason": "描写生动"}]},
+    {"dimension_id": "worldbuilding", "dimension_name": "世界观构建", "score": 7.5, "confidence": "high", "reason": "修仙体系完整", "evidence": []},
+    {"dimension_id": "theme", "dimension_name": "主题深度", "score": 5.5, "confidence": "low", "reason": "仅基于精读块判断", "evidence": []},
+    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 5.0, "confidence": "low", "reason": "仅基于精读块判断", "evidence": []},
+    {"dimension_id": "emotion", "dimension_name": "情感感染力", "score": 7.0, "confidence": "low", "reason": "高潮段有冲击力", "evidence": [{"quote": "师父的身影化为漫天星辰", "char_range": [450000, 450015], "chapter_ref": "第4章", "reason": "情感冲击"}]},
+    {"dimension_id": "innovation", "dimension_name": "创新性", "score": 4.0, "confidence": "medium", "reason": "套路化明显", "evidence": []}
+  ],
+  "weighted_total": 6.3,
+  "recommendation_stars": 3,
+  "one_line_summary": "一部节奏起伏明显的修仙长篇，高潮有力但中段注水。",
+  "perspectives": [
+    {"perspective": "literary", "strengths": ["高潮段描写有力", "伏笔回收得当", "师徒情感真挚"], "weaknesses": ["中段拖沓", "套路化严重", "主题浅"], "verdict": "文学性一般，高潮段有亮点。"},
+    {"perspective": "commercial", "strengths": ["爽点明确", "节奏高潮有冲击力", "世界观完整"], "weaknesses": ["中段弃书风险高", "创新不足", "配角工具化"], "verdict": "有一定市场但竞争力有限。"}
+  ],
+  "defects": [
+    {"rule_id": "D01", "rule_name": "龙傲天", "location": "块3-4", "severity": "mild", "description": "主角后期过于顺利", "evidence": []},
+    {"rule_id": "D04", "rule_name": "节奏塌陷", "location": "块1", "severity": "medium", "description": "日常修炼段节奏低迷", "evidence": []}
+  ],
+  "pacing_curve": [4, 2, 3, 5, 4],
+  "character_arcs": [
+    {"name": "陈风", "appearances": [0, 1, 2, 3, 4], "traits": ["平凡好奇", "修炼", "竞争", "悲痛坚定", "成熟沉稳"], "arc_summary": "从平凡少年成长为一代掌门"},
+    {"name": "师父", "appearances": [0, 3], "traits": ["严厉慈祥", "牺牲"], "arc_summary": "为弟子牺牲"}
+  ],
+  "improvement_suggestions": ["压缩中段日常修炼段落", "增加配角深度", "减少套路化情节"]
+}

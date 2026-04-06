@@ -1,0 +1,10 @@
+{
+  "source_file": "golden_edge.txt",
+  "source_file_sha256": "eeff00112233aabb",
+  "total_chars": 4000,
+  "total_chunks": 2,
+  "chunks": [
+    {"chunk_id": 0, "char_range": [0, 2000], "chapter_ref": "", "analysis_depth": "deep"},
+    {"chunk_id": 1, "char_range": [2000, 4000], "chapter_ref": "", "analysis_depth": "deep"}
+  ]
+}

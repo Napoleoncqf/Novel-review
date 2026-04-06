@@ -1,0 +1,18 @@
+{
+  "chunk_id": 2,
+  "char_range": [4200, 6200],
+  "chapter_ref": "第3章 结局",
+  "plot_events": ["真相大白", "李明做出选择"],
+  "characters_present": ["李明（释然、坚定）", "老张（欣慰）"],
+  "emotional_tone": "温暖、释然",
+  "worldbuilding_elements": [],
+  "foreshadowing": [],
+  "pacing_score": 4,
+  "information_density": 3,
+  "notable_writing": ["他终于明白，有些秘密是用来守护的"],
+  "evidence": [
+    {"quote": "他终于明白，有些秘密是用来守护的", "char_range": [5800, 5820], "chapter_ref": "第3章 结局", "reason": "主题升华"},
+    {"quote": "老张笑了，像山间化开的雪", "char_range": [6000, 6015], "chapter_ref": "第3章 结局", "reason": "比喻精准，人物弧光收束"}
+  ],
+  "defects_detected": []
+}

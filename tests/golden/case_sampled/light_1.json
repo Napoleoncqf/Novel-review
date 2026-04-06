@@ -1,0 +1,11 @@
+{
+  "chunk_id": 1,
+  "char_range": [120000, 240000],
+  "chapter_ref": "第2章",
+  "plot_events": ["修炼日常"],
+  "characters_present": ["陈风"],
+  "plot_progression": "no: 日常修炼无主线推进",
+  "state_changes": [],
+  "pacing_score": 2,
+  "candidate_flags": []
+}

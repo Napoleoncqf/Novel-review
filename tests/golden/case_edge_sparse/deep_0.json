@@ -1,0 +1,17 @@
+{
+  "chunk_id": 0,
+  "char_range": [0, 2000],
+  "chapter_ref": "",
+  "plot_events": ["角色A出场"],
+  "characters_present": ["角色A"],
+  "emotional_tone": "平淡",
+  "worldbuilding_elements": [],
+  "foreshadowing": [],
+  "pacing_score": 2,
+  "information_density": 1,
+  "notable_writing": [],
+  "evidence": [
+    {"quote": "他走在路上", "char_range": [0, 5], "chapter_ref": "", "reason": "开篇"}
+  ],
+  "defects_detected": []
+}
