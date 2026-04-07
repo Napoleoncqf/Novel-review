@@ -9,14 +9,46 @@
   "dimension_scores": [
     {"dimension_id": "plot", "dimension_name": "情节结构", "score": 7.0, "confidence": "high", "reason": "主线清晰但中段注水", "evidence": [{"quote": "剑光划破长空，也划破了他最后的退路", "char_range": [400000, 400020], "chapter_ref": "第4章", "reason": "高潮"}]},
     {"dimension_id": "character", "dimension_name": "人物塑造", "score": 6.5, "confidence": "medium", "reason": "主角有成长线，配角单薄", "evidence": [{"quote": "师父的身影化为漫天星辰", "char_range": [450000, 450015], "chapter_ref": "第4章", "reason": "师父形象"}]},
-    {"dimension_id": "writing", "dimension_name": "文笔质量", "score": 6.0, "confidence": "low", "reason": "仅基于精读块判断", "evidence": [{"quote": "灵气如潮水涌入经脉", "char_range": [50000, 50015], "chapter_ref": "第1章", "reason": "描写生动"}]},
     {"dimension_id": "worldbuilding", "dimension_name": "世界观构建", "score": 7.5, "confidence": "high", "reason": "修仙体系完整", "evidence": []},
-    {"dimension_id": "theme", "dimension_name": "主题深度", "score": 5.5, "confidence": "low", "reason": "仅基于精读块判断", "evidence": []},
-    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 5.0, "confidence": "low", "reason": "仅基于精读块判断", "evidence": []},
-    {"dimension_id": "emotion", "dimension_name": "情感感染力", "score": 7.0, "confidence": "low", "reason": "高潮段有冲击力", "evidence": [{"quote": "师父的身影化为漫天星辰", "char_range": [450000, 450015], "chapter_ref": "第4章", "reason": "情感冲击"}]},
-    {"dimension_id": "innovation", "dimension_name": "创新性", "score": 4.0, "confidence": "medium", "reason": "套路化明显", "evidence": []}
+    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 5.0, "confidence": "low", "reason": "仅基于精读块判断", "evidence": []}
   ],
-  "weighted_total": 6.3,
+  "qualitative_annotations": [
+    {
+      "dimension_id": "writing",
+      "dimension_name": "文笔质量",
+      "style_tags": ["辞藻华丽型", "诗化抒情"],
+      "techniques": [
+        {"technique": "通感", "quote": "灵气如潮水涌入经脉", "chapter_ref": "第1章", "explanation": "将抽象的灵气感受转化为具象的水流触感"}
+      ],
+      "summary": "文笔偏华丽诗化，修仙描写有画面感，偶有过度修饰。"
+    },
+    {
+      "dimension_id": "theme",
+      "dimension_name": "主题深度",
+      "style_tags": ["成长蜕变", "命运抗争"],
+      "techniques": [
+        {"technique": "镜像对照", "quote": "师父的身影化为漫天星辰", "chapter_ref": "第4章", "explanation": "师徒命运对照，以牺牲映射成长代价"}
+      ],
+      "summary": "主题围绕成长与牺牲，通过师徒线自然呈现但深度有限。"
+    },
+    {
+      "dimension_id": "emotion",
+      "dimension_name": "情感感染力",
+      "style_tags": ["浓烈外放", "热血激昂"],
+      "techniques": [
+        {"technique": "细节蓄力", "quote": "师父的身影化为漫天星辰", "chapter_ref": "第4章", "explanation": "前文铺垫师徒情感后在高潮段集中释放"}
+      ],
+      "summary": "情感处理偏外放，高潮段有较强冲击力，日常段情感较薄。"
+    },
+    {
+      "dimension_id": "innovation",
+      "dimension_name": "创新性",
+      "style_tags": ["传统守正"],
+      "techniques": [],
+      "summary": "套路化明显，基本遵循修仙类型公式，无显著创新。"
+    }
+  ],
+  "weighted_total": 6.8,
   "recommendation_stars": 3,
   "one_line_summary": "一部节奏起伏明显的修仙长篇，高潮有力但中段注水。",
   "perspectives": [

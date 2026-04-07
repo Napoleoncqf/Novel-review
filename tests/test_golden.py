@@ -15,10 +15,8 @@ from novel_review.models import (
 GOLDEN_DIR = Path(__file__).parent / "golden"
 CASES = [d.name for d in sorted(GOLDEN_DIR.iterdir()) if d.is_dir()]
 
-DIMENSION_IDS = {
-    "plot", "character", "writing", "worldbuilding",
-    "theme", "dialogue", "emotion", "innovation",
-}
+SCORABLE_IDS = {"plot", "character", "worldbuilding", "dialogue"}
+QUALITATIVE_IDS = {"writing", "theme", "emotion", "innovation"}
 
 
 def _load(path: Path):
@@ -162,11 +160,17 @@ class TestFinalReport:
         assert r.total_chars > 0
         assert r.total_chunks > 0
 
-    def test_8_dimensions(self, case_dir):
+    def test_scorable_dimensions(self, case_dir):
         r = self._report(case_dir)
-        assert len(r.dimension_scores) == 8
+        assert len(r.dimension_scores) == 4
         ids = {ds.dimension_id for ds in r.dimension_scores}
-        assert ids == DIMENSION_IDS
+        assert ids == SCORABLE_IDS
+
+    def test_qualitative_annotations(self, case_dir):
+        r = self._report(case_dir)
+        assert len(r.qualitative_annotations) == 4
+        ids = {qa.dimension_id for qa in r.qualitative_annotations}
+        assert ids == QUALITATIVE_IDS
 
     def test_scores_in_range(self, case_dir):
         r = self._report(case_dir)

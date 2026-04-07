@@ -9,14 +9,42 @@
   "dimension_scores": [
     {"dimension_id": "plot", "dimension_name": "情节结构", "score": 2.0, "confidence": "high", "reason": "情节混乱", "evidence": []},
     {"dimension_id": "character", "dimension_name": "人物塑造", "score": 2.0, "confidence": "high", "reason": "人物扁平", "evidence": []},
-    {"dimension_id": "writing", "dimension_name": "文笔质量", "score": 3.0, "confidence": "high", "reason": "用词单调", "evidence": [{"quote": "他走在路上", "char_range": [0, 5], "chapter_ref": "", "reason": "平淡"}]},
     {"dimension_id": "worldbuilding", "dimension_name": "世界观构建", "score": 2.0, "confidence": "high", "reason": "无设定", "evidence": []},
-    {"dimension_id": "theme", "dimension_name": "主题深度", "score": 1.5, "confidence": "high", "reason": "无主题", "evidence": []},
-    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 2.0, "confidence": "high", "reason": "无对话", "evidence": []},
-    {"dimension_id": "emotion", "dimension_name": "情感感染力", "score": 1.5, "confidence": "high", "reason": "无情感", "evidence": []},
-    {"dimension_id": "innovation", "dimension_name": "创新性", "score": 1.0, "confidence": "high", "reason": "无创新", "evidence": []}
+    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 2.0, "confidence": "high", "reason": "无对话", "evidence": []}
   ],
-  "weighted_total": 2.1,
+  "qualitative_annotations": [
+    {
+      "dimension_id": "writing",
+      "dimension_name": "文笔质量",
+      "style_tags": ["口语化"],
+      "techniques": [
+        {"technique": "白描", "quote": "他走在路上", "chapter_ref": "", "explanation": "极度简单的叙述，缺乏任何修辞手法"}
+      ],
+      "summary": "语言极度平淡单调，无明显风格特征，接近口语流水账。"
+    },
+    {
+      "dimension_id": "theme",
+      "dimension_name": "主题深度",
+      "style_tags": [],
+      "techniques": [],
+      "summary": "无法提炼出明确主题，文本缺乏思想内核。"
+    },
+    {
+      "dimension_id": "emotion",
+      "dimension_name": "情感感染力",
+      "style_tags": ["冷峻疏离"],
+      "techniques": [],
+      "summary": "文本无情感表达，无法引起任何情感反应。"
+    },
+    {
+      "dimension_id": "innovation",
+      "dimension_name": "创新性",
+      "style_tags": ["传统守正"],
+      "techniques": [],
+      "summary": "无创新元素，叙事手法单一。"
+    }
+  ],
+  "weighted_total": 2.0,
   "recommendation_stars": 1,
   "one_line_summary": "缺乏基本叙事要素的文本。",
   "perspectives": [

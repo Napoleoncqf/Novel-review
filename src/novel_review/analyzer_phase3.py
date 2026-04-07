@@ -5,9 +5,13 @@ import json
 from .models import (
     CrossChunkAnalysis, DeepResult, LightResult,
     FinalReport, DimensionScore, PerspectiveReview, DefectReport, Evidence,
+    QualitativeAnnotation, TechniqueEvidence,
 )
 from .llm_client import LLMClient
-from .config import build_rubric_text, get_all_dimensions
+from .config import (
+    build_rubric_text, build_qualitative_prompt,
+    get_all_dimensions, get_scorable_dimensions, get_qualitative_dimensions,
+)
 
 SYSTEM_LITERARY = """\
 你是一位严格的文学评论者，关注语言艺术、叙事技巧、主题深度和人物心理刻画。
@@ -36,11 +40,15 @@ EVAL_TEMPLATE = """\
 缺陷检测结果：
 {defect_text}
 
-评分标准（rubric）：
+=== 可量化维度（需打分） ===
 {rubric}
 
+=== 定性标注维度（不打分，只做风格识别和手法举证） ===
+{qualitative_guide}
+
 请输出JSON，包含：
-- dimension_scores: 数组，每项含dimension_id、dimension_name、score(1-10浮点数)、confidence(high/medium/low)、reason(<=100字)、evidence(引用已有证据的quote和reason)
+- dimension_scores: 数组，仅针对上方"可量化维度"，每项含dimension_id、dimension_name、score(1-10浮点数)、confidence(high/medium/low)、reason(<=100字)、evidence(引用已有证据的quote和reason)
+- qualitative_annotations: 数组，仅针对上方"定性标注维度"，每项含dimension_id、dimension_name、style_tags(从给定标签池选1-3个)、techniques(数组，每项含technique手法名、quote引用<=30字、chapter_ref、explanation<=50字说明为何是此手法)、summary(一句话定性描述<=80字，描述风格特征而非优劣判断)
 - strengths: 优点3条（string数组）
 - weaknesses: 不足3条（string数组）
 - verdict: 核心判断1句话
@@ -58,7 +66,12 @@ async def run_phase3(
     title: str = "",
 ) -> FinalReport:
     rubric = build_rubric_text()
+    qualitative_guide = build_qualitative_prompt()
     all_dims = get_all_dimensions()
+    scorable_dims = get_scorable_dimensions()
+    qual_dims = get_qualitative_dimensions()
+    scorable_ids = {d["id"] for d in scorable_dims}
+    qual_ids = {d["id"] for d in qual_dims}
 
     # 构建摘要
     plot_lines = []
@@ -100,6 +113,7 @@ async def run_phase3(
         evidence_text=evidence_text[:3000],
         defect_text=defect_text[:1000],
         rubric=rubric[:3000],
+        qualitative_guide=qualitative_guide[:2000],
     )
 
     # 双视角并行调用
@@ -141,7 +155,7 @@ async def run_phase3(
                 return val
         return ""
 
-    # 合并评分（取两视角均值）
+    # ── 合并 scorable 维度评分（取两视角均值） ──
     dim_scores_map: dict[str, list[float]] = {}
     all_evidence: dict[str, list] = {}
     all_reasons: dict[str, list[str]] = {}
@@ -150,21 +164,17 @@ async def run_phase3(
         for ds in src.get("dimension_scores", []):
             raw_id = ds.get("dimension_id", "") or ds.get("dimension_name", "")
             did = _resolve_dim_id(str(raw_id))
-            if did:
+            if did and did in scorable_ids:
                 dim_scores_map.setdefault(did, []).append(float(ds.get("score", 5)))
                 all_evidence.setdefault(did, []).extend(ds.get("evidence", []))
                 all_reasons.setdefault(did, []).append(ds.get("reason", ""))
 
-    # 构建维度→证据的fallback映射（从deep_results中提取）
+    # fallback 证据映射（仅 scorable 维度）
     _dim_keywords = {
         "plot": ["情节", "伏笔", "高潮", "转折", "冲突", "节奏"],
         "character": ["人物", "角色", "性格", "成长", "动机", "心理"],
-        "writing": ["文笔", "语言", "修辞", "描写", "叙述", "用词"],
         "worldbuilding": ["设定", "世界", "背景", "时代", "环境"],
-        "theme": ["主题", "思想", "价值", "意义", "隐喻"],
         "dialogue": ["对话", "台词", "口吻", "语气"],
-        "emotion": ["情感", "感动", "泪目", "震撼", "压抑", "温馨"],
-        "innovation": ["创新", "新颖", "独特", "套路"],
     }
     _fallback_evidence: dict[str, list[Evidence]] = {did: [] for did in _dim_keywords}
     for dr in deep_results:
@@ -175,16 +185,13 @@ async def run_phase3(
                         _fallback_evidence[did].append(ev)
 
     dimension_scores = []
-    for d in all_dims:
+    for d in scorable_dims:
         did = d["id"]
         scores = dim_scores_map.get(did, [5.0])
         avg = round(sum(scores) / len(scores), 1)
         conf = "high" if coverage_pct >= 80 else ("medium" if coverage_pct >= 50 else "low")
-        if did in ("writing", "theme", "emotion") and coverage_pct < 60:
-            conf = "low"
         reasons = all_reasons.get(did, [""])
         evs = []
-        # 先尝试LLM返回的evidence
         for e in all_evidence.get(did, [])[:3]:
             if isinstance(e, dict):
                 try:
@@ -201,7 +208,6 @@ async def run_phase3(
                     ))
                 except Exception:
                     pass
-        # fallback: 如果LLM没返回evidence，从deep_results按关键词匹配
         if not evs and did in _fallback_evidence:
             evs = _fallback_evidence[did][:2]
         dimension_scores.append(DimensionScore(
@@ -213,11 +219,56 @@ async def run_phase3(
             evidence=evs,
         ))
 
-    # 加权总分
+    # ── 合并 qualitative 维度标注（标签取并集，手法合并去重） ──
+    qual_map: dict[str, dict] = {}
+    for src in [lit_data, com_data]:
+        for qa in src.get("qualitative_annotations", []):
+            raw_id = qa.get("dimension_id", "") or qa.get("dimension_name", "")
+            did = _resolve_dim_id(str(raw_id))
+            if did and did in qual_ids:
+                entry = qual_map.setdefault(did, {"tags": set(), "techniques": [], "summaries": []})
+                for tag in qa.get("style_tags", []):
+                    entry["tags"].add(tag)
+                for tech in qa.get("techniques", []):
+                    if isinstance(tech, dict):
+                        entry["techniques"].append(tech)
+                summary = qa.get("summary", "")
+                if summary:
+                    entry["summaries"].append(summary)
+
+    qualitative_annotations = []
+    for d in qual_dims:
+        did = d["id"]
+        entry = qual_map.get(did, {"tags": set(), "techniques": [], "summaries": []})
+        # 去重 techniques（按 technique+quote 去重）
+        seen = set()
+        deduped_techs = []
+        for t in entry["techniques"]:
+            key = (t.get("technique", ""), t.get("quote", ""))
+            if key not in seen:
+                seen.add(key)
+                deduped_techs.append(TechniqueEvidence(
+                    technique=str(t.get("technique", "")),
+                    quote=str(t.get("quote", ""))[:60],
+                    chapter_ref=str(t.get("chapter_ref", "")),
+                    explanation=str(t.get("explanation", ""))[:100],
+                ))
+        summaries = entry["summaries"]
+        summary = summaries[0] if summaries else ""
+        qualitative_annotations.append(QualitativeAnnotation(
+            dimension_id=did,
+            dimension_name=d["name"],
+            style_tags=sorted(entry["tags"]),
+            techniques=deduped_techs[:5],
+            summary=summary[:80],
+        ))
+
+    # ── 加权总分（仅 scorable 维度，权重归一化） ──
+    total_weight = sum(d["weight"] for d in scorable_dims)
     weighted = 0.0
     for ds in dimension_scores:
-        w = next((d["weight"] for d in all_dims if d["id"] == ds.dimension_id), 0)
-        weighted += ds.score * w
+        raw_w = next((d["weight"] for d in scorable_dims if d["id"] == ds.dimension_id), 0)
+        weighted += ds.score * (raw_w / total_weight) if total_weight else 0
     weighted = round(weighted, 1)
 
     # 推荐星级
@@ -261,6 +312,7 @@ async def run_phase3(
         deep_ratio=coverage.get("ratio", 0),
         confidence_note=_build_confidence_note(coverage, coverage_pct),
         dimension_scores=dimension_scores,
+        qualitative_annotations=qualitative_annotations,
         weighted_total=weighted,
         recommendation_stars=stars,
         one_line_summary=lit_data.get("one_line_summary", com_data.get("one_line_summary", "")),

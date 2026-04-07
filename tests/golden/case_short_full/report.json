@@ -9,14 +9,46 @@
   "dimension_scores": [
     {"dimension_id": "plot", "dimension_name": "情节结构", "score": 7.5, "confidence": "high", "reason": "主线清晰，伏笔回收得当", "evidence": [{"quote": "这里的人都有秘密", "char_range": [1800, 1810], "chapter_ref": "第1章 起始", "reason": "伏笔"}]},
     {"dimension_id": "character", "dimension_name": "人物塑造", "score": 7.0, "confidence": "high", "reason": "主角有成长弧光", "evidence": [{"quote": "他终于明白，有些秘密是用来守护的", "char_range": [5800, 5820], "chapter_ref": "第3章 结局", "reason": "主题升华"}]},
-    {"dimension_id": "writing", "dimension_name": "文笔质量", "score": 8.0, "confidence": "high", "reason": "比喻精准", "evidence": [{"quote": "暮色将山峦染成一片深紫", "char_range": [100, 115], "chapter_ref": "第1章 起始", "reason": "环境描写"}]},
     {"dimension_id": "worldbuilding", "dimension_name": "世界观构建", "score": 6.0, "confidence": "high", "reason": "设定基本能支撑故事", "evidence": []},
-    {"dimension_id": "theme", "dimension_name": "主题深度", "score": 7.5, "confidence": "high", "reason": "主题通过情节自然呈现", "evidence": [{"quote": "他终于明白，有些秘密是用来守护的", "char_range": [5800, 5820], "chapter_ref": "第3章 结局", "reason": "点题"}]},
-    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 6.5, "confidence": "high", "reason": "对话能推动情节", "evidence": [{"quote": "你不该来这里", "char_range": [3000, 3010], "chapter_ref": "第2章 转折", "reason": "对话推动冲突"}]},
-    {"dimension_id": "emotion", "dimension_name": "情感感染力", "score": 7.0, "confidence": "high", "reason": "有明确情感高潮", "evidence": [{"quote": "真相如冰水浇下，从头顶凉到脚底", "char_range": [2500, 2520], "chapter_ref": "第2章 转折", "reason": "情感冲击"}]},
-    {"dimension_id": "innovation", "dimension_name": "创新性", "score": 6.0, "confidence": "high", "reason": "在类型框架内", "evidence": []}
+    {"dimension_id": "dialogue", "dimension_name": "对话质量", "score": 6.5, "confidence": "high", "reason": "对话能推动情节", "evidence": [{"quote": "你不该来这里", "char_range": [3000, 3010], "chapter_ref": "第2章 转折", "reason": "对话推动冲突"}]}
   ],
-  "weighted_total": 7.1,
+  "qualitative_annotations": [
+    {
+      "dimension_id": "writing",
+      "dimension_name": "文笔质量",
+      "style_tags": ["简洁利落", "白描克制型"],
+      "techniques": [
+        {"technique": "白描", "quote": "暮色将山峦染成一片深紫", "chapter_ref": "第1章 起始", "explanation": "以简洁环境描写代替情绪直抒"}
+      ],
+      "summary": "语言简洁有画面感，修辞克制不堆砌，偶有精准比喻点缀。"
+    },
+    {
+      "dimension_id": "theme",
+      "dimension_name": "主题深度",
+      "style_tags": ["成长蜕变", "日常哲思"],
+      "techniques": [
+        {"technique": "以小见大", "quote": "有些秘密是用来守护的", "chapter_ref": "第3章 结局", "explanation": "通过小镇秘密折射人与信任的关系"}
+      ],
+      "summary": "主题通过情节自然呈现，以小镇故事承载成长与信任的思考。"
+    },
+    {
+      "dimension_id": "emotion",
+      "dimension_name": "情感感染力",
+      "style_tags": ["暗流涌动", "克制内敛"],
+      "techniques": [
+        {"technique": "节奏骤变", "quote": "真相如冰水浇下，从头顶凉到脚底", "chapter_ref": "第2章 转折", "explanation": "平缓节奏后突然的情感冲击"}
+      ],
+      "summary": "情感处理偏克制，高潮段通过节奏骤变制造冲击而非煽情渲染。"
+    },
+    {
+      "dimension_id": "innovation",
+      "dimension_name": "创新性",
+      "style_tags": ["类型内微创新"],
+      "techniques": [],
+      "summary": "基本符合悬疑成长类型框架，无明显创新也无严重套路。"
+    }
+  ],
+  "weighted_total": 6.9,
   "recommendation_stars": 3,
   "one_line_summary": "一部以小镇秘密为切入点的成长小说，节奏紧凑但篇幅有限。",
   "perspectives": [

@@ -2,6 +2,7 @@ dimensions:
   core:
     - id: plot
       name: 情节结构
+      eval_mode: scorable
       weight: 0.20
       sub_aspects: [起承转合完整度, 节奏感, 冲突设置, 伏笔回收, 高潮段落冲击力]
       rubric:
@@ -13,6 +14,7 @@ dimensions:
 
     - id: character
       name: 人物塑造
+      eval_mode: scorable
       weight: 0.20
       sub_aspects: [主角立体度, 配角辨识度, 成长弧光, 行为动机一致性, 对话个性化]
       rubric:
@@ -24,17 +26,14 @@ dimensions:
 
     - id: writing
       name: 文笔质量
-      weight: 0.15
+      eval_mode: qualitative
       sub_aspects: [语言风格, 修辞水平, 叙述流畅度, 废话率, 描写密度]
-      rubric:
-        "9-10": 语言有辨识度和美感，修辞精准不堆砌，叙述如行云流水
-        "7-8": 文笔流畅，用词准确，偶有出彩句子，无明显废话
-        "5-6": 文笔合格但平淡，有少量口水话或重复描写
-        "3-4": 用词单调或堆砌，大量废话注水，叙述生硬
-        "1-2": 语病频出，基本表达能力欠缺
+      style_tags: [白描克制型, 辞藻华丽型, 口语化, 意识流, 古典雅致, 简洁利落, 诗化抒情, 幽默戏谑]
+      technique_hints: [重复, 留白, 对比, 象征, 通感, 反讽, 白描, 蒙太奇, 意识流, 互文]
 
     - id: worldbuilding
       name: 世界观构建
+      eval_mode: scorable
       weight: 0.15
       sub_aspects: [设定完整性, 内部逻辑自洽, 细节丰富度, 设定与情节的融合度]
       rubric:
@@ -46,18 +45,15 @@ dimensions:
 
     - id: theme
       name: 主题深度
-      weight: 0.15
+      eval_mode: qualitative
       sub_aspects: [核心思想, 价值表达, 是否有余味, 主题与情节的有机结合]
-      rubric:
-        "9-10": 主题深刻且有独特视角，不说教，读后有持久思考
-        "7-8": 有明确主题表达，通过情节自然呈现，有一定思考空间
-        "5-6": 主题存在但较浅或直白，偶有说教感
-        "3-4": 主题模糊或流于口号，与情节脱节
-        "1-2": 无法提炼出主题，纯粹流水账
+      style_tags: [人性探索, 社会批判, 成长蜕变, 命运抗争, 存在主义, 爱与救赎, 权力博弈, 日常哲思]
+      technique_hints: [隐喻, 反讽, 多义性, 开放结局, 镜像对照, 以小见大, 寓言化]
 
   auxiliary:
     - id: dialogue
       name: 对话质量
+      eval_mode: scorable
       weight: 0.05
       sub_aspects: [符合人设, 信息密度, 口语化程度, 推动情节能力]
       rubric:
@@ -69,24 +65,16 @@ dimensions:
 
     - id: emotion
       name: 情感感染力
-      weight: 0.05
+      eval_mode: qualitative
       sub_aspects: [高潮段冲击力, 情绪调动能力, 情感真实度]
-      rubric:
-        "9-10": 多处让人落泪/热血沸腾/脊背发凉，情感共鸣强烈
-        "7-8": 有1-2处明确的情感高潮，能引起共鸣
-        "5-6": 情感表达存在但力度不足，未能深入触动
-        "3-4": 情感苍白或刻意煽情
-        "1-2": 完全无法引起情感反应
+      style_tags: [克制内敛, 浓烈外放, 暗流涌动, 温情细腻, 冷峻疏离, 热血激昂, 黑色幽默]
+      technique_hints: [重复渲染, 反衬, 留白, 细节蓄力, 节奏骤变, 视角切换, 通感]
 
     - id: innovation
       name: 创新性
-      weight: 0.05
+      eval_mode: qualitative
       sub_aspects: [题材新颖度, 叙事手法, 是否有套路化问题]
-      rubric:
-        "9-10": 题材或手法有开创性，让人眼前一亮
-        "7-8": 在类型框架内有独特切入点或新鲜元素
-        "5-6": 基本符合类型预期，无明显创新也无严重套路
-        "3-4": 严重套路化，情节走向可预测
-        "1-2": 完全是模板化写作
+      style_tags: [类型颠覆, 叙事实验, 跨类型融合, 视角创新, 结构创新, 类型内微创新, 传统守正]
+      technique_hints: [非线性叙事, 不可靠叙述者, 多线交织, 元叙事, 类型解构, 反套路]
 
-prompt_version: "v1"
+prompt_version: "v2"

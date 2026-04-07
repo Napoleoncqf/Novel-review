@@ -94,6 +94,21 @@ class CrossChunkAnalysis(BaseModel):
 
 
 # ── Phase3 Final Evaluation ─────────────────────────────────────────
+class TechniqueEvidence(BaseModel):
+    technique: str
+    quote: str = Field(max_length=60)
+    chapter_ref: str = ""
+    explanation: str = ""
+
+
+class QualitativeAnnotation(BaseModel):
+    dimension_id: str
+    dimension_name: str
+    style_tags: list[str] = []
+    techniques: list[TechniqueEvidence] = []
+    summary: str = ""
+
+
 class DimensionScore(BaseModel):
     dimension_id: str
     dimension_name: str
@@ -129,8 +144,9 @@ class FinalReport(BaseModel):
     read_mode: str = ""  # "full" | "sampled"
     deep_ratio: float = 0.0
     confidence_note: str = ""
-    # 评分
+    # 评分（仅 scorable 维度）
     dimension_scores: list[DimensionScore] = []
+    qualitative_annotations: list[QualitativeAnnotation] = []
     weighted_total: float = 0.0
     recommendation_stars: int = Field(ge=1, le=5, default=3)
     one_line_summary: str = ""

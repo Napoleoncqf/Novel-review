@@ -70,6 +70,24 @@ def render_markdown(report: FinalReport) -> str:
                 lines.append(f"  - \"{ev.quote}\" — {ev.reason}")
     lines.append("")
 
+    # 定性标注维度
+    if report.qualitative_annotations:
+        lines.append("## 审美维度定性标注")
+        lines.append("*以下维度不参与评分，仅提供风格识别和手法举证供人工参考。*")
+        lines.append("")
+        for qa in report.qualitative_annotations:
+            lines.append(f"### {qa.dimension_name}")
+            if qa.style_tags:
+                lines.append(f"**风格标签：** {'、'.join(qa.style_tags)}")
+            if qa.summary:
+                lines.append(f"\n{qa.summary}")
+            if qa.techniques:
+                lines.append("\n**识别到的手法：**")
+                for t in qa.techniques:
+                    ref = f"（{t.chapter_ref}）" if t.chapter_ref else ""
+                    lines.append(f"- **{t.technique}**：\"{t.quote}\"{ref} — {t.explanation}")
+            lines.append("")
+
     # 双视角
     lines.append("## 双视角点评")
     for p in report.perspectives:

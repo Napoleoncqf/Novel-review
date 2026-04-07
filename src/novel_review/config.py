@@ -70,6 +70,14 @@ def get_all_dimensions(dim_data: dict | None = None) -> list[dict]:
     return dims.get("core", []) + dims.get("auxiliary", [])
 
 
+def get_scorable_dimensions(dim_data: dict | None = None) -> list[dict]:
+    return [d for d in get_all_dimensions(dim_data) if d.get("eval_mode") == "scorable"]
+
+
+def get_qualitative_dimensions(dim_data: dict | None = None) -> list[dict]:
+    return [d for d in get_all_dimensions(dim_data) if d.get("eval_mode") == "qualitative"]
+
+
 def get_prompt_version(dim_data: dict | None = None) -> str:
     if dim_data is None:
         dim_data = load_dimensions()
@@ -77,12 +85,30 @@ def get_prompt_version(dim_data: dict | None = None) -> str:
 
 
 def build_rubric_text(dim_data: dict | None = None) -> str:
-    all_dims = get_all_dimensions(dim_data)
+    scorable = get_scorable_dimensions(dim_data)
+    total_weight = sum(d["weight"] for d in scorable)
     lines = []
-    for d in all_dims:
-        lines.append(f"## {d['name']}（权重{d['weight']}）")
+    for d in scorable:
+        norm_w = round(d["weight"] / total_weight, 2) if total_weight else 0
+        lines.append(f"## {d['name']}（归一化权重{norm_w}）")
         lines.append(f"  子维度：{'、'.join(d['sub_aspects'])}")
         for band, desc in d.get("rubric", {}).items():
             lines.append(f"  [{band}分] {desc}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def build_qualitative_prompt(dim_data: dict | None = None) -> str:
+    qual_dims = get_qualitative_dimensions(dim_data)
+    lines = []
+    for d in qual_dims:
+        lines.append(f"## {d['name']}")
+        lines.append(f"  关注面：{'、'.join(d['sub_aspects'])}")
+        tags = d.get("style_tags", [])
+        if tags:
+            lines.append(f"  风格标签池（选1-3个）：{'、'.join(tags)}")
+        hints = d.get("technique_hints", [])
+        if hints:
+            lines.append(f"  可识别手法：{'、'.join(hints)}")
         lines.append("")
     return "\n".join(lines)
